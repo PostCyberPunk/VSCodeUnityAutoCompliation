@@ -100,7 +100,7 @@ namespace PostcyberPunk.AutoCompilation
 				_createListener();
 			}
 			SessionState.SetBool("DisableAutoComplation", !toggle);
-			Debug.Log("Auto Completion is " + (toggle ? "Off" : "On"));
+			Debug.Log("Auto Completion is " + (!toggle ? "Off" : "On"));
 		}
 		private static void OnCompilationStarted(object _) => _closeListener();
 		private static void OnCompilationFinished(object _) => _createListener();
