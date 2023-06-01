@@ -19,7 +19,7 @@ namespace PostcyberPunk.AutoCompilation
 			if (!SessionState.GetBool("DisableAutoComplation", false))
 			{
 				needUpdate = false;
-				CompilationPipeline.compilationStarted += OnCompilationStarted;
+				// CompilationPipeline.compilationStarted += OnCompilationStarted;
 				// CompilationPipeline.compilationFinished += OnCompilationFinished;
 				EditorApplication.quitting += _closeListener;
 				EditorApplication.update += onUpdate;
@@ -74,8 +74,9 @@ namespace PostcyberPunk.AutoCompilation
 		{
 			if (!EditorApplication.isCompiling && !EditorApplication.isUpdating && needUpdate)
 			{
+				_closeListener();
+				// Debug.LogWarning("Compiled in background");
 				needUpdate = false;
-				// Debug.Log("Compiled in background");
 				AssetDatabase.Refresh();
 			}
 		}
@@ -94,7 +95,7 @@ namespace PostcyberPunk.AutoCompilation
 			SessionState.SetBool("DisableAutoComplation", !toggle);
 			Debug.Log("Auto Completion is " + (!toggle ? "Off" : "On"));
 		}
-		private static void OnCompilationStarted(object _) => _closeListener();
+		// private static void OnCompilationStarted(object _) => _closeListener();
 		// private static void OnCompilationFinished(object _) => _createListener();
 	}
 }
