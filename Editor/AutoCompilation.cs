@@ -59,7 +59,7 @@ namespace PostcyberPunk.AutoCompilation
 				listener.Close();
 				listener = null;
 				// var request = context.Request;
-				// _result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
+				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
 			}
 		}
 		private static void _closeListener()
