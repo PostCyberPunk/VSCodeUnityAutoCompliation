@@ -13,7 +13,6 @@ namespace PostcyberPunk.AutoCompilation
 		private static HttpListener listener;
 		private static bool needUpdate;
 		private static string port = "10245";
-		private static AsyncCallback _onRequest;
 		private static IAsyncResult _result;
 		static AutoCompilation()
 		{
@@ -24,7 +23,6 @@ namespace PostcyberPunk.AutoCompilation
 				CompilationPipeline.compilationFinished += OnCompilationFinished;
 				EditorApplication.quitting += _closeListener;
 				EditorApplication.update += onUpdate;
-				_onRequest= new AsyncCallback(OnRequest);
 				_createListener();
 			}
 		}
