@@ -54,9 +54,6 @@ namespace PostcyberPunk.AutoCompilation
 			{
 				listener.EndGetContext(result);
 				needUpdate = true;
-				listener.Stop();
-				listener.Close();
-				listener = null;
 				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
 			}
 		}
