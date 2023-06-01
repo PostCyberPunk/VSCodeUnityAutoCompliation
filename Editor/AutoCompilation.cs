@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.Compilation;
 using System.Net;
+using UnityEditorInternal;
 using System.Net.Sockets;
 
 namespace PostcyberPunk.AutoCompilation
@@ -14,21 +15,24 @@ namespace PostcyberPunk.AutoCompilation
 		private static bool needUpdate;
 		private static string port = "10245";
 		private static IAsyncResult _result;
+		private static bool isEditorFocused = true;
 		static AutoCompilation()
 		{
+			// isEditorFocused=InternalEditorUtility.isApplicationActive;
 			if (!SessionState.GetBool("DisableAutoComplation", false))
 			{
 				needUpdate = false;
 				// CompilationPipeline.compilationStarted += OnCompilationStarted;
-				// CompilationPipeline.compilationFinished += OnCompilationFinished;
+				CompilationPipeline.compilationFinished += OnCompilationFinished;
 				EditorApplication.quitting += _closeListener;
 				EditorApplication.update += onUpdate;
-				_createListener();
+				// _createListener();
 			}
 		}
 
 		private static void _createListener()
 		{
+			// Debug.LogWarning("Creating");
 			if (listener != null)
 			{
 				return;
@@ -39,7 +43,7 @@ namespace PostcyberPunk.AutoCompilation
 				listener.Prefixes.Add("http://127.0.0.1:" + port + "/refresh/");
 				listener.Start();
 				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
-				
+
 				// Debug.Log("Auto Compilation HTTP server started");
 			}
 			catch (Exception e)
@@ -69,10 +73,24 @@ namespace PostcyberPunk.AutoCompilation
 			listener.Stop();
 			listener.Close();
 			listener = null;
+			// Debug.Log("Closed Listener");
 		}
 		private static void onUpdate()
 		{
-			if (!EditorApplication.isCompiling && !EditorApplication.isUpdating && needUpdate)
+			//Check focus
+			if (InternalEditorUtility.isApplicationActive != isEditorFocused)
+			{
+				isEditorFocused = !isEditorFocused;
+				if (isEditorFocused)
+				{
+					_closeListener();
+				}
+				else if (!EditorApplication.isCompiling && !EditorApplication.isUpdating)
+				{
+					_createListener();
+				}
+			}
+			if (!isEditorFocused && !EditorApplication.isCompiling && !EditorApplication.isUpdating && needUpdate)
 			{
 				_closeListener();
 				// Debug.LogWarning("Compiled in background");
@@ -96,6 +114,6 @@ namespace PostcyberPunk.AutoCompilation
 			Debug.Log("Auto Completion is " + (!toggle ? "Off" : "On"));
 		}
 		// private static void OnCompilationStarted(object _) => _closeListener();
-		// private static void OnCompilationFinished(object _) => _createListener();
+		private static void OnCompilationFinished(object _) { if (!isEditorFocused) _createListener(); }
 	}
 }
