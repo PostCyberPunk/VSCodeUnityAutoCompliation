@@ -44,14 +44,12 @@ namespace PostcyberPunk.AutoCompilation
 			}
 			catch (Exception e)
 			{
-				// ForceReleasePort();
 				Debug.LogError("Auto Compilation starting failed:" + e);
 			}
 
 		}
 		private static void OnRequest(IAsyncResult result)
 		{
-
 			if (listener.IsListening && !EditorApplication.isCompiling)
 			{
 				listener.EndGetContext(result);
