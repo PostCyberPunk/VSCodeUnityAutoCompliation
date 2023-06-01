@@ -20,7 +20,7 @@ namespace PostcyberPunk.AutoCompilation
 			{
 				needUpdate = false;
 				CompilationPipeline.compilationStarted += OnCompilationStarted;
-				CompilationPipeline.compilationFinished += OnCompilationFinished;
+				// CompilationPipeline.compilationFinished += OnCompilationFinished;
 				EditorApplication.quitting += _closeListener;
 				EditorApplication.update += onUpdate;
 				_createListener();
@@ -103,6 +103,6 @@ namespace PostcyberPunk.AutoCompilation
 			Debug.Log("Auto Completion is " + (!toggle ? "Off" : "On"));
 		}
 		private static void OnCompilationStarted(object _) => _closeListener();
-		private static void OnCompilationFinished(object _) => _createListener();
+		// private static void OnCompilationFinished(object _) => _createListener();
 	}
 }
