@@ -106,24 +106,6 @@ namespace PostcyberPunk.AutoCompilation
 			SessionState.SetBool("DisableAutoComplation", !toggle);
 			Debug.Log("Auto Completion is " + (toggle ? "Off" : "On"));
 		}
-		private static void forceClosePort(string _ip, string  _port)
-		{
-			try
-			{
-			IPAddress ipadd = IPAddress.Parse(_ip);
-			var tcp = new TcpListener(new IPEndPoint(ipadd, Int32.Parse(_port)));
-			tcp.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-			tcp.Start();
-			tcp.Stop();
-			}
-			catch (System.Exception)
-			{
-				
-			}
-		}
-		[MenuItem("Tools/AutoCompilation/Force Release Port")]
-		public static void ForceReleasePort()=>forceClosePort("127.0.0.1",port);
-
 		private static void OnCompilationStarted(object _) => _closeListener();
 		private static void OnCompilationFinished(object _) => _createListener();
 	}
