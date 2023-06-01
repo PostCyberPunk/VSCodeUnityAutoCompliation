@@ -54,11 +54,9 @@ namespace PostcyberPunk.AutoCompilation
 			{
 				listener.EndGetContext(result);
 				needUpdate = true;
-				// var context = listener.EndGetContext(result);
 				listener.Stop();
 				listener.Close();
 				listener = null;
-				// var request = context.Request;
 				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
 			}
 		}
@@ -71,11 +69,8 @@ namespace PostcyberPunk.AutoCompilation
 				return;
 			}
 
-			// listener.EndGetContext(_result);
 			listener.Stop();
-			
 			listener.Close();
-			// listener.Abort();
 			listener = null;
 		}
 		private static void onUpdate()
