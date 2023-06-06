@@ -12,7 +12,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/realgamessoftware/dear-imgui-unity",
-    "revision": ""
+    "url": "https://github.com/PostCyberPunk/VSCodeUnityAutoCompliation"
   }
 }		
