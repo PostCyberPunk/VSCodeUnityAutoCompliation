@@ -1,27 +1,23 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
+
 namespace PostcyberPunk.AutoCompilation
 {
-	public class HttpManager : ScriptableSingleton<HttpManager>
+	public class HttpManager
 	{
 		public HttpListener listener;
-		private bool needUpdate;
+		private bool needUpdate = false;
 		private string port = "10245";
-		private IAsyncResult _result;
-		private void Awake()
+		public HttpManager()
 		{
 			Init();
 		}
-		private void Init()
+		internal void Init()
 		{
-			Debug.Log("Init");
 			CreateListener();
-			EditorApplication.quitting += CloseListener;
+			// EditorApplication.quitting += CloseListener;
 			EditorApplication.update += onUpdate;
 		}
 		private void CreateListener()
@@ -36,8 +32,8 @@ namespace PostcyberPunk.AutoCompilation
 				listener = new HttpListener();
 				listener.Prefixes.Add("http://127.0.0.1:" + port + "/refresh/");
 				listener.Start();
-				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
-				Debug.Log("Auto Compilation HTTP server started");
+				listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
+				// Debug.Log("Auto Compilation HTTP server started");
 			}
 			catch (Exception e)
 			{
@@ -47,9 +43,8 @@ namespace PostcyberPunk.AutoCompilation
 		}
 		private void OnRequest(IAsyncResult result)
 		{
-				listener.EndGetContext(result);
-				needUpdate = true;
-				_result = listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
+			listener.EndGetContext(result);
+			needUpdate = true;
 		}
 		private void CloseListener()
 		{
@@ -68,10 +63,11 @@ namespace PostcyberPunk.AutoCompilation
 		private void onUpdate()
 		{
 			//Check focus
-			if (listener.IsListening && !EditorApplication.isCompiling && !SessionState.GetBool("DisableAutoComplation", false))
+			if (listener.IsListening && !EditorApplication.isCompiling && needUpdate && !SessionState.GetBool("DisableAutoComplation", false))
 			{
 				needUpdate = false;
 				AssetDatabase.Refresh();
+				listener.BeginGetContext(new AsyncCallback(OnRequest), listener);
 			}
 		}
 	}

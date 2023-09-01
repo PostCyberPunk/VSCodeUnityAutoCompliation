@@ -1,21 +1,18 @@
-using System;
-using System.Net;
-using System.Net.Sockets;
 using UnityEditor;
-using UnityEditor.Compilation;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace PostcyberPunk.AutoCompilation
 {
-	[InitializeOnLoad]
-	public static class AutoCompilation
+	public class AutoCompilation : ScriptableSingleton<AutoCompilation>
 	{
-		static AutoCompilation()
+		public HttpManager httpManager;
+		[InitializeOnLoadMethod]
+		public static void Init()
 		{
-			if (HttpManager.instance == null)
-				new HttpManager();
-			Debug.Log(HttpManager.instance.listener==null);
+			if (instance.httpManager == null)
+			{
+				instance.httpManager = new HttpManager();
+			}
 		}
 
 		[MenuItem("Tools/AutoCompilation/Toggle Auto-Completion")]
